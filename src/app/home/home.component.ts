@@ -18,10 +18,8 @@ export class HomeComponent implements OnInit {
   beginnerCourses$: Observable<Course[]>;
   advancedCourses$: Observable<Course[]>;
 
-
   constructor(
     private http: HttpClient,
-    private dialog: MatDialog,
     private coursesService: CoursesService) {
   }
 
@@ -30,20 +28,6 @@ export class HomeComponent implements OnInit {
     courses$.subscribe(val => console.log(val))
     this.beginnerCourses$ = courses$.pipe(map(courses => courses.filter(course => course.category == "BEGINNER")))
     this.advancedCourses$ = courses$.pipe(map(courses => courses.filter(course => course.category == "ADVANCED")))
-  }
-
-  editCourse(course: Course) {
-
-    const dialogConfig = new MatDialogConfig();
-
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = "400px";
-
-    dialogConfig.data = course;
-
-    const dialogRef = this.dialog.open(CourseDialogComponent, dialogConfig);
-
   }
 
 }
