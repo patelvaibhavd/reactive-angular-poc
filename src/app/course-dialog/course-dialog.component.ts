@@ -8,6 +8,7 @@ import { throwError } from 'rxjs';
 import { CoursesService } from '../services/courses.service';
 import { LoadingService } from '../loading/loading.service';
 import { MessagesService } from '../messages/messages.service';
+import { CoursesStoreService } from '../services/courses.store.service';
 
 @Component({
     selector: 'course-dialog',
@@ -25,6 +26,7 @@ export class CourseDialogComponent implements AfterViewInit {
         private coursesService: CoursesService,
         private loadingService: LoadingService,
         private messagesService: MessagesService,
+        private coursesStoreService: CoursesStoreService,
         @Inject(MAT_DIALOG_DATA) course: Course) {
         this.course = course;
         this.form = fb.group({
@@ -40,18 +42,20 @@ export class CourseDialogComponent implements AfterViewInit {
 
     save() {
         const changes = this.form.value;
-        const saveCourse$ = this.coursesService.saveCourse(this.course.id, changes)
-            .pipe(
-                catchError((error) => {
-                    const message = "Could not save course";
-                    console.log(error);
-                    this.messagesService.showErrors(message);
-                    return throwError(error);
-                })
-            );
-        this.loadingService.showLoaderUntilCompleted(saveCourse$).subscribe((val) => {
-            this.dialogRef.close(val)
-        });
+        this.coursesStoreService.saveCourse(this.course.id, changes).subscribe();
+        this.dialogRef.close(changes)
+        // const saveCourse$ = this.coursesService.saveCourse(this.course.id, changes)
+        //     .pipe(
+        //         catchError((error) => {
+        //             const message = "Could not save course";
+        //             console.log(error);
+        //             this.messagesService.showErrors(message);
+        //             return throwError(error);
+        //         })
+        //     );
+        // this.loadingService.showLoaderUntilCompleted(saveCourse$).subscribe((val) => {
+        //     this.dialogRef.close(val)
+        // });
     }
 
     close() {
