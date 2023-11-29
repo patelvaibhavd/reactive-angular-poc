@@ -8,6 +8,7 @@ import { CourseDialogComponent } from '../course-dialog/course-dialog.component'
 import { CoursesService } from '../services/courses.service';
 import { LoadingService } from '../loading/loading.service';
 import { MessagesService } from '../messages/messages.service';
+import { CoursesStoreService } from '../services/courses.store.service';
 
 
 @Component({
@@ -21,10 +22,11 @@ export class HomeComponent implements OnInit {
   advancedCourses$: Observable<Course[]>;
 
   constructor(
-    private http: HttpClient,
-    private coursesService: CoursesService,
-    private loadingService: LoadingService,
-    private messagesService: MessagesService) {
+    // private http: HttpClient,
+    // private coursesService: CoursesService,
+    // private loadingService: LoadingService,
+    // private messagesService: MessagesService,
+    private coursesStoreService: CoursesStoreService) {
   }
 
   ngOnInit() {
@@ -32,19 +34,21 @@ export class HomeComponent implements OnInit {
   }
 
   reloadCourses() {
-    const courses$ = this.coursesService.loadAllCourses()
-      .pipe(
-        map((courses => courses.sort(sortCoursesBySeqNo))),
-        catchError((error) => {
-          const message = "Could Not Load Courses"
-          this.messagesService.showErrors(message)
-          console.log('err', error)
-          return throwError(message);
-        })
-      );
-    const loadCourses$ = this.loadingService.showLoaderUntilCompleted(courses$);
-    this.beginnerCourses$ = loadCourses$.pipe(map(courses => courses.filter(course => course.category == "BEGINNER")))
-    this.advancedCourses$ = loadCourses$.pipe(map(courses => courses.filter(course => course.category == "ADVANCED")))
+    // const courses$ = this.coursesService.loadAllCourses()
+    //   .pipe(
+    //     map((courses => courses.sort(sortCoursesBySeqNo))),
+    //     catchError((error) => {
+    //       const message = "Could Not Load Courses"
+    //       this.messagesService.showErrors(message)
+    //       console.log('err', error)
+    //       return throwError(message);
+    //     })
+    //   );
+    // const loadCourses$ = this.loadingService.showLoaderUntilCompleted(courses$);
+    // this.beginnerCourses$ = loadCourses$.pipe(map(courses => courses.filter(course => course.category == "BEGINNER")))
+    // this.advancedCourses$ = loadCourses$.pipe(map(courses => courses.filter(course => course.category == "ADVANCED")))
+    this.beginnerCourses$ = this.coursesStoreService.filterByCategory("BEGINNER")
+    this.advancedCourses$ = this.coursesStoreService.filterByCategory("ADVANCED")
   }
 }
 

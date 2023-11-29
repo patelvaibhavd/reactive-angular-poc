@@ -12,8 +12,7 @@ import { MessagesService } from '../messages/messages.service';
 @Component({
     selector: 'course-dialog',
     templateUrl: './course-dialog.component.html',
-    styleUrls: ['./course-dialog.component.css'],
-    providers: [LoadingService, MessagesService]
+    styleUrls: ['./course-dialog.component.css']
 })
 export class CourseDialogComponent implements AfterViewInit {
 
